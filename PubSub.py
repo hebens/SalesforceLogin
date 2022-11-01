@@ -18,7 +18,7 @@ semaphore = threading.Semaphore(1)
 latest_replay_id = None
 
 config = configparser.ConfigParser()
-config.read("./resources/application.properties")
+config.read("../resources/application.properties")
 topic    = config["Server"]["subscribe2Topic"]
 grpcHost = config["Server"]["grpcHost"]
 grpcPort = config["Server"]["grpcPort"]
@@ -44,7 +44,8 @@ def decode(schema, payload):
 with open(certifi.where(), 'rb') as f:
     creds = grpc.ssl_channel_credentials(f.read())
 with grpc.secure_channel(pubsubUrl, creds) as channel:
-    authmetadata = OauthLogin.oAuthLogin()
+    authmetadata = OauthLogin.auth()
+    print("Authmeta :: " + str(authmetadata))
     stub = pb2_grpc.PubSubStub(channel)
     substream = stub.Subscribe(fetchReqStream(topic), metadata=authmetadata)
     for event in substream:

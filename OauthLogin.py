@@ -3,7 +3,7 @@ import requests
 import logging
 import json
 
-def auth():
+def authenticate():
 
     config = configparser.ConfigParser()
     config.read("../resources/application.properties")
@@ -26,11 +26,27 @@ def auth():
     instance_url = r.json().get("instance_url")
     organization_id = (r.json().get("id").split("/")[-2]) #fetches user id (-1) and org id (-2)
         
-    authmeta = (('accesstoken', access_token), 
-                ('instanceurl', instance_url), 
-                ('tenantid', organization_id))
-    return authmeta
+    return access_token, instance_url, organization_id
+
+def auth(target):
+    access_token, instance_url, organization_id = authenticate()
+
+    match target:
+        case "pubsub":
+            return  (('accesstoken', access_token), 
+                    ('instanceurl', instance_url), 
+                    ('tenantid', organization_id))
+        case "rest":
+            return access_token, instance_url
 
 if __name__ == '__main__':
-    auth = auth()
-    print(auth)
+    
+    # --------------------------------------------------------------------------------------------
+    # calling the auth method requires selection of the login purpose to prepare a proper response
+    # valid purposes are:
+    # pubsub and rest
+    # --------------------------------------------------------------------------------------------
+    cred = auth('rest') 
+    print("Rest :: " + str(cred))
+    cred = auth('pubsub')
+    print("\nPubSub :: " + str(cred))
