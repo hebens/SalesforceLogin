@@ -44,7 +44,7 @@ def decode(schema, payload):
 with open(certifi.where(), 'rb') as f:
     creds = grpc.ssl_channel_credentials(f.read())
 with grpc.secure_channel(pubsubUrl, creds) as channel:
-    authmetadata = OauthLogin.auth()
+    authmetadata = OauthLogin.auth('pubsub')
     print("Authmeta :: " + str(authmetadata))
     stub = pb2_grpc.PubSubStub(channel)
     substream = stub.Subscribe(fetchReqStream(topic), metadata=authmetadata)
