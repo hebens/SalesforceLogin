@@ -1,6 +1,5 @@
 import configparser
 import requests
-import logging
 import json
 
 def authenticate():

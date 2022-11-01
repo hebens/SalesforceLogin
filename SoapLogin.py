@@ -5,9 +5,6 @@ import xml.etree.ElementTree as et
 from datetime import datetime
 import requests
 import configparser
-
-import pubsub_api_pb2 as pb2
-import pubsub_api_pb2_grpc as pb2_grpc
 from urllib.parse import urlparse
 
 config = configparser.ConfigParser()
